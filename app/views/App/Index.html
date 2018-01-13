@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Steam ID Lookup</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" type="image/png" href="/public/img/favicon.png">
+	<link rel="stylesheet" type="text/css" href="/public/css/normalize.min.css">
+	<link rel="stylesheet" type="text/css" href="/public/css/styles.css">
+	<link rel="stylesheet" type="text/css" href="/public/css/lib/tippy.css">
+	<link href="https://fonts.googleapis.com/css?family=Duru+Sans" rel="stylesheet">
+</head>
+
+<body>
+	<div class="christmas-lights"></div>
+	<div class="container">
+		<div class="contaner-inner">
+			<div id="logo"></div>
+			<br>
+			<form class="search-form full-width">
+				<input id="search-box" disabled maxlength="2048" name="search" autocomplete="off" title="Search" type="text" value="" placeholder="STEAM_X:Y:Z / 000 / [U:1:000] / steamcommunity.com/id/user"
+				 aria-label="Search" aria-haspopup="false" role="combobox" aria-autocomplete="list" dir="ltr" spellcheck="false" autofocus="true">
+			</form>
+			<div id="search-box-meta">
+				<div class="pull-left half-width">
+					Click any field to copy
+				</div>
+				<div class="pull-right half-width">
+					User resolved via
+					<span id="resolved-via">unknown</span>
+				</div>
+			</div>
+
+			<br>
+			<div id="results-container" class="full-width">
+				<div id="loading-results" class="hidden">
+					<div class="load-bar">
+						<div class="bar"></div>
+						<div class="bar"></div>
+					</div>
+				</div>
+				<div id="not-found-results" class="hidden">
+					<img src="/public/img/rsz_1rsz_1user-not-found.png">
+					<br>User not found
+				</div>
+				<div id="user-results" class="hidden">
+					<div id="user-pic-container">
+						<img id="user-pic" src="https://steamcdn-a.akamaihd.net/steamcommunity/public/images/avatars/fe/fef49e7fa7e1997310d705b2a6158ff8dc1cdfeb_full.jpg"
+						 alt="Profile Picture">
+						<div id="steam-level">0</div>
+					</div>
+					<ul>
+						<li id="user-name"></li>
+						<li id="user-url">
+							<a href="" target="_blank"></a>
+						</li>
+
+						<li id="user-id">
+							<label>Steam ID</label>
+							<br>
+							<input type="text" readonly title="Copied!" data-clipboard-target="#user-id input">
+						</li>
+						<li id="user-id64">
+							<label>Steam ID 64</label>
+							<br>
+							<input type="text" readonly title="Copied!" data-clipboard-target="#user-id64 input">
+						</li>
+						<li id="user-id32">
+							<label>Steam ID 32</label>
+							<br>
+							<input type="text" readonly title="Copied!" data-clipboard-target="#user-id32 input">
+						</li>
+						<li id="user-id3">
+							<label>Steam ID 3</label>
+							<br>
+							<input type="text" readonly title="Copied!" data-clipboard-target="#user-id3 input">
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<a href="http://steamcommunity.com/profiles/76561198132612090" target="_blank" title="Give me feedback!" id="owner-profile">
+		<div></div>
+	</a>
+
+	<script src="/public/js/lib/clipboard.min.js"></script>
+	<script src="/public/js/lib/tippy.all.min.js"></script>
+	<script src="/public/js/main.js"></script>
+</body>
+
+</html>
