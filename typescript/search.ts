@@ -1,5 +1,3 @@
-import { fitText } from './fittext';
-
 declare var Clipboard: any;
 declare var tippy: any;
 
