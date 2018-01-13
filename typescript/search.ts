@@ -26,12 +26,15 @@ export class Search {
 	private userSteamID32Elem: HTMLInputElement = null;
 	private userSteamID3Elem: HTMLInputElement = null;
 
+	private inputElemHasBlurred: boolean = false;
+
 	constructor(private inputElem: HTMLInputElement) {
 		this.xhReq = new XMLHttpRequest();
-		this.xhReq.onerror = (ev: ErrorEvent) => { };
+		this.xhReq.onerror = () => { };
 
 		inputElem.addEventListener('keyup', this.inputElemKeyUpEvent.bind(this));
 		inputElem.addEventListener('focus', this.inputElemFocusEvent.bind(this));
+		inputElem.addEventListener('blur', this.inputElemBlurEvent.bind(this));
 
 		this.userSteamIDElem = document.getElementById('user-id').querySelector('input');
 		tippy(this.userSteamIDElem, {
@@ -88,6 +91,15 @@ export class Search {
 			this.inputElem.select();
 	}
 
+	private inputElemBlurEvent(ev: FocusEvent): any {
+		if (this.inputElemHasBlurred)
+			return;
+		
+		this.inputElemHasBlurred = true;
+
+		addClass('search-box', 'smaller');
+	}
+
 	private onClipboardCopySuccess(ev: any): void {
 		ev.clearSelection();
 		setTimeout(() => {
@@ -101,7 +113,6 @@ export class Search {
 
 	public execQuery(query: string, async: boolean = false): boolean {
 		addClass('logo', 'slide-to-top-hide');
-		addClass('search-box', 'smaller');
 		hide('user-results');
 		hide('not-found-results');
 		show('loading-results');
@@ -112,8 +123,6 @@ export class Search {
 		this.xhReq.onloadend = (ev: Event) => {
 			if (this.xhReq.status !== 200)
 				return;
-
-			this.inputElem.blur();
 
 			let jsonResp = <QueryResp>JSON.parse(this.xhReq.responseText);
 			if (jsonResp) {

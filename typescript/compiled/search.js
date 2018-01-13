@@ -9,10 +9,12 @@ var Search = (function () {
         this.userSteamID64Elem = null;
         this.userSteamID32Elem = null;
         this.userSteamID3Elem = null;
+        this.inputElemHasBlurred = false;
         this.xhReq = new XMLHttpRequest();
-        this.xhReq.onerror = function (ev) { };
+        this.xhReq.onerror = function () { };
         inputElem.addEventListener('keyup', this.inputElemKeyUpEvent.bind(this));
         inputElem.addEventListener('focus', this.inputElemFocusEvent.bind(this));
+        inputElem.addEventListener('blur', this.inputElemBlurEvent.bind(this));
         this.userSteamIDElem = document.getElementById('user-id').querySelector('input');
         tippy(this.userSteamIDElem, {
             trigger: 'manual',
@@ -60,6 +62,12 @@ var Search = (function () {
         if (hasClass(this.inputElem, 'smaller'))
             this.inputElem.select();
     };
+    Search.prototype.inputElemBlurEvent = function (ev) {
+        if (this.inputElemHasBlurred)
+            return;
+        this.inputElemHasBlurred = true;
+        addClass('search-box', 'smaller');
+    };
     Search.prototype.onClipboardCopySuccess = function (ev) {
         var _this = this;
         ev.clearSelection();
@@ -75,7 +83,6 @@ var Search = (function () {
         var _this = this;
         if (async === void 0) { async = false; }
         addClass('logo', 'slide-to-top-hide');
-        addClass('search-box', 'smaller');
         hide('user-results');
         hide('not-found-results');
         show('loading-results');
@@ -84,7 +91,6 @@ var Search = (function () {
         this.xhReq.onloadend = function (ev) {
             if (_this.xhReq.status !== 200)
                 return;
-            _this.inputElem.blur();
             var jsonResp = JSON.parse(_this.xhReq.responseText);
             if (jsonResp) {
                 if (!jsonResp.success) {
