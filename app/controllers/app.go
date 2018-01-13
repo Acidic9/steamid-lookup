@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/Acidic9/go-steam/steamapi"
 	"github.com/Acidic9/go-steam/steamid"
@@ -96,6 +97,15 @@ func (c App) APISearch(query string) revel.Result {
 	}
 
 	go func() {
+		ipBlacklistStr, found := revel.Config.String("pushbullet.ip_blacklist")
+		if found {
+			for _, ip := range strings.Split(ipBlacklistStr, ", ") {
+				if c.ClientIP == ip {
+					return
+				}
+			}
+		}
+
 		var userStr string
 		if userFound {
 			userStr = "user " + summary.PersonaName + " with SteamID " + summary.IDs.ID64
@@ -103,7 +113,7 @@ func (c App) APISearch(query string) revel.Result {
 			userStr = "no valid Steam user"
 		}
 
-		pb.PushNoteToChannel(
+		err := pb.PushNoteToChannel(
 			"steamidlookup",
 			"New Search Query: "+query,
 			fmt.Sprintf("IP address %s searched for %s and found %s.\nReferencer: %s",
@@ -112,6 +122,9 @@ func (c App) APISearch(query string) revel.Result {
 				userStr,
 				c.Request.Referer(),
 			))
+		if err != nil {
+			revel.AppLog.Errorf("failed to send pushbullet note: %s", err.Error())
+		}
 	}()
 
 	if !userFound {
