@@ -75,19 +75,69 @@ body
 				box-shadow: 0px 2px 8px 0px rgba(0,0,0,0.75)
 
 			#search-box::placeholder
-				font-size: 16px
+				font-size: 14px
 				color: #a5a5a5
 
-			#search-box.smaller
-				transition: padding 0.2s ease
-				padding: 8px 32px
-				font-size: 17px
-				color: #353535
+			#search-button
+				border: none
+				background: none
+				float: right
+				padding: 0
+				margin: 0
+				margin-top: -51px
+				position: relative
+				width: 51px
+				height: 51px
+				text-align: center
+				opacity: 0.4
+				transition: opacity .2s
 
-			#search-box.smaller:focus
-				padding: 14px 32px
-				font-size: 20px
-				color: #000
+				img
+					width: 24px
+					height: 24px
+
+			button:hover
+				opacity: 0.7 !important
+
+			button:focus
+				outline: 0
+
+			&.smaller
+				#search-box
+					transition: padding 0.2s ease, font-size 0.2s ease
+					padding: 8px 32px
+					font-size: 17px
+					color: #353535
+
+				#search-box::placeholder
+					transition: font-size 0.2s ease
+					font-size: 11.9px
+
+				#search-button
+					transition: height 0.2s ease, margin-top 0.2s ease
+					margin-top: -35px
+					height: 35px
+
+					img
+						transition: width 0.2s ease, height 0.2s ease
+						width: 16.47px
+						height: 16.47px
+
+				#search-box:focus
+					padding: 14px 32px
+					font-size: 20px
+					color: #000
+
+				#search-box:focus::placeholder
+					font-size: 14px
+
+				#search-box:focus ~ #search-button
+					margin-top: -51px
+					height: 51px
+
+				#search-box:focus ~ #search-button img
+					width: 24px
+					height: 24px
 
 		#results-container
 			display: inline-block
@@ -183,7 +233,7 @@ body
 	#search-box-meta
 		margin-top: -12px
 		font-size: 12px
-		color: #d4c5dcb8
+		color: rgba(212, 197, 220, 184)
 		font-family: monospace
 		font-style: italic
 		opacity: 0

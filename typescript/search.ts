@@ -27,6 +27,7 @@ export class Search {
 	private userSteamID3Elem: HTMLInputElement = null;
 
 	private inputElemHasBlurred: boolean = false;
+	private hasSearched: boolean = false;
 
 	constructor(private inputElem: HTMLInputElement) {
 		this.xhReq = new XMLHttpRequest();
@@ -87,17 +88,17 @@ export class Search {
 	}
 
 	private inputElemFocusEvent(ev: FocusEvent): any {
-		if (hasClass(this.inputElem, 'smaller'))
+		if (hasClass(document.querySelector('.search-form'), 'smaller'))
 			this.inputElem.select();
 	}
 
 	private inputElemBlurEvent(ev: FocusEvent): any {
-		if (this.inputElemHasBlurred)
+		if (!this.hasSearched || this.inputElemHasBlurred)
 			return;
-		
+
 		this.inputElemHasBlurred = true;
 
-		addClass('search-box', 'smaller');
+		addClass(document.querySelector('.search-form'), 'smaller');
 	}
 
 	private onClipboardCopySuccess(ev: any): void {
@@ -116,6 +117,7 @@ export class Search {
 		hide('user-results');
 		hide('not-found-results');
 		show('loading-results');
+		this.hasSearched = true;
 
 		let foundUser = null;
 
@@ -252,34 +254,30 @@ enum ResolvedVia {
 	ID64,
 }
 
-const addClass = (id: string, className: string): void => {
-	let elem = document.getElementById(id);
+const addClass = (elem: string | HTMLElement | Element, className: string): void => {
+	if (typeof elem === 'string')
+		elem = document.getElementById(elem);
 	if (elem.classList)
 		elem.classList.add(className);
 	else
 		elem.className += ' ' + className;
 }
 
-const removeClass = (id: string, className: string): void => {
-	let elem = document.getElementById(id);
+const removeClass = (elem: string | HTMLElement | Element, className: string): void => {
+	if (typeof elem === 'string')
+		elem = document.getElementById(elem);
 	if (elem.classList)
 		elem.classList.remove(className);
 	else
 		elem.className = elem.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
 }
 
-const hasClass = (elem: HTMLElement, className: string): boolean => {
+const hasClass = (elem: string | HTMLElement | Element, className: string): boolean => {
+	if (typeof elem === 'string')
+		elem = document.getElementById(elem);
 	if (elem.classList)
 		return elem.classList.contains(className);
-
 	return new RegExp('(^| )' + className + '( |$)', 'gi').test(elem.className);
-}
-
-const loopClass = (selectorClass: string, func: (elem: Element) => void): void => {
-	let elems = document.getElementsByClassName(selectorClass);
-	for (let i = 0; i < elems.length; ++i) {
-		func(elems[i]);
-	}
 }
 
 const hide = (id: string): void => {

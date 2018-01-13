@@ -10,6 +10,7 @@ var Search = (function () {
         this.userSteamID32Elem = null;
         this.userSteamID3Elem = null;
         this.inputElemHasBlurred = false;
+        this.hasSearched = false;
         this.xhReq = new XMLHttpRequest();
         this.xhReq.onerror = function () { };
         inputElem.addEventListener('keyup', this.inputElemKeyUpEvent.bind(this));
@@ -59,14 +60,14 @@ var Search = (function () {
         this.searchTimeout = setTimeout(function () { _this.execQuery(inputElemValue, true); }, Search.KeyUpSearchDelay);
     };
     Search.prototype.inputElemFocusEvent = function (ev) {
-        if (hasClass(this.inputElem, 'smaller'))
+        if (hasClass(document.querySelector('.search-form'), 'smaller'))
             this.inputElem.select();
     };
     Search.prototype.inputElemBlurEvent = function (ev) {
-        if (this.inputElemHasBlurred)
+        if (!this.hasSearched || this.inputElemHasBlurred)
             return;
         this.inputElemHasBlurred = true;
-        addClass('search-box', 'smaller');
+        addClass(document.querySelector('.search-form'), 'smaller');
     };
     Search.prototype.onClipboardCopySuccess = function (ev) {
         var _this = this;
@@ -86,6 +87,7 @@ var Search = (function () {
         hide('user-results');
         hide('not-found-results');
         show('loading-results');
+        this.hasSearched = true;
         var foundUser = null;
         this.xhReq.open('GET', '/api/search?query=' + query, async);
         this.xhReq.onloadend = function (ev) {
@@ -182,30 +184,28 @@ var ResolvedVia;
     ResolvedVia[ResolvedVia["ID32"] = 4] = "ID32";
     ResolvedVia[ResolvedVia["ID64"] = 5] = "ID64";
 })(ResolvedVia || (ResolvedVia = {}));
-var addClass = function (id, className) {
-    var elem = document.getElementById(id);
+var addClass = function (elem, className) {
+    if (typeof elem === 'string')
+        elem = document.getElementById(elem);
     if (elem.classList)
         elem.classList.add(className);
     else
         elem.className += ' ' + className;
 };
-var removeClass = function (id, className) {
-    var elem = document.getElementById(id);
+var removeClass = function (elem, className) {
+    if (typeof elem === 'string')
+        elem = document.getElementById(elem);
     if (elem.classList)
         elem.classList.remove(className);
     else
         elem.className = elem.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
 };
 var hasClass = function (elem, className) {
+    if (typeof elem === 'string')
+        elem = document.getElementById(elem);
     if (elem.classList)
         return elem.classList.contains(className);
     return new RegExp('(^| )' + className + '( |$)', 'gi').test(elem.className);
-};
-var loopClass = function (selectorClass, func) {
-    var elems = document.getElementsByClassName(selectorClass);
-    for (var i = 0; i < elems.length; ++i) {
-        func(elems[i]);
-    }
 };
 var hide = function (id) {
     addClass(id, 'hidden');
