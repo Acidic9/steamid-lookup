@@ -5,14 +5,13 @@ var Startup = (function () {
     function Startup() {
     }
     Startup.main = function () {
-        var _this = this;
-        this.searchBoxElem = document.getElementById('search-box');
-        var search = new search_1.Search(this.searchBoxElem);
+        var searchBoxElem = document.getElementById('search-box');
+        var search = new search_1.Search(searchBoxElem);
         document.querySelector('.search-form').onsubmit = function () {
-            search.execQuery(_this.searchBoxElem.value, true);
+            search.execQuery(searchBoxElem.value, true);
             return false;
         };
-        this.searchBoxElem.disabled = false;
+        searchBoxElem.disabled = false;
         if (window.location.pathname !== '/') {
             var res = /\/\u\/(\d{17})$/g.exec(window.location.pathname);
             var uid = res && res.length >= 2 ? res[1] : null;
@@ -20,8 +19,11 @@ var Startup = (function () {
                 window.history.pushState('SteamID Lookup', 'SteamID Lookup', '/');
             }
             else {
-                this.searchBoxElem.style.animation = 'unset';
-                this.searchBoxElem.style.opacity = '1 !important';
+                searchBoxElem.style.animation = 'unset';
+                searchBoxElem.style.opacity = '1 !important';
+                var searchBtnElem = document.getElementById('search-button');
+                searchBtnElem.style.animation = 'unset';
+                searchBtnElem.style.opacity = '0.4 !important';
                 search.execQuery(uid, true);
             }
         }

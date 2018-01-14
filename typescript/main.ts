@@ -6,17 +6,15 @@ import { Search } from './search';
  * @class Startup
  */
 class Startup {
-	private static searchBoxElem: HTMLInputElement
-
 	public static main(): number {
-		this.searchBoxElem = <HTMLInputElement>document.getElementById('search-box');
-		let search = new Search(this.searchBoxElem);
+		let searchBoxElem = <HTMLInputElement>document.getElementById('search-box');
+		let search = new Search(searchBoxElem);
 
 		(document.querySelector('.search-form') as HTMLFormElement).onsubmit = () => {
-			search.execQuery(this.searchBoxElem.value, true);
+			search.execQuery(searchBoxElem.value, true);
 			return false;
 		}
-		this.searchBoxElem.disabled = false;
+		searchBoxElem.disabled = false;
 
 		if (window.location.pathname !== '/') {
 			let res = /\/\u\/(\d{17})$/g.exec(window.location.pathname);
@@ -24,8 +22,11 @@ class Startup {
 			if (uid === null) {
 				window.history.pushState('SteamID Lookup', 'SteamID Lookup', '/');
 			} else {
-				this.searchBoxElem.style.animation = 'unset';
-				this.searchBoxElem.style.opacity = '1 !important';
+				searchBoxElem.style.animation = 'unset';
+				searchBoxElem.style.opacity = '1 !important';
+				let searchBtnElem = document.getElementById('search-button');
+				searchBtnElem.style.animation = 'unset';
+				searchBtnElem.style.opacity = '0.4 !important';
 				search.execQuery(uid, true);
 			}
 		}
