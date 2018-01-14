@@ -5,6 +5,8 @@ import (
 	"strconv"
 	"strings"
 
+	"steamid-lookup/app/ipaddr"
+
 	"github.com/Acidic9/go-steam/steamapi"
 	"github.com/Acidic9/go-steam/steamid"
 	"github.com/revel/revel"
@@ -116,11 +118,10 @@ func (c App) APISearch(query string) revel.Result {
 		err := pb.PushNoteToChannel(
 			"steamidlookup",
 			"New Search Query: "+query,
-			fmt.Sprintf("IP address %s searched for %s and found %s.\nReferencer: %s",
-				c.ClientIP,
+			fmt.Sprintf("IP address %s searched for %s and found %s.",
+				ipaddr.GetIPAdress(c.Request),
 				query,
 				userStr,
-				c.Request.Referer(),
 			))
 		if err != nil {
 			revel.AppLog.Errorf("failed to send pushbullet note: %s", err.Error())
