@@ -80,7 +80,7 @@ export class Search {
 
 		clearTimeout(this.searchTimeout);
 
-		let inputElemValue = this.inputElem.value;
+		const inputElemValue = this.inputElem.value;
 		if (inputElemValue == '')
 			return;
 
@@ -126,7 +126,7 @@ export class Search {
 			if (this.xhReq.status !== 200)
 				return;
 
-			let jsonResp = <QueryResp>JSON.parse(this.xhReq.responseText);
+			const jsonResp = <QueryResp>JSON.parse(this.xhReq.responseText);
 			if (jsonResp) {
 				if (!jsonResp.success) {
 					foundUser = false;
@@ -178,7 +178,7 @@ export class Search {
 						break;
 				}
 
-				let userLevel = document.getElementById('steam-level');
+				const userLevel = document.getElementById('steam-level');
 				let userLevelFontSize;
 				if (jsonResp.playerSummary.steamLevel < 100)
 					userLevelFontSize = 16;
@@ -190,10 +190,10 @@ export class Search {
 				userLevel.innerText = jsonResp.playerSummary.steamLevel.toString();
 				(document.getElementById('user-pic') as HTMLImageElement).src = jsonResp.playerSummary.avatarfull;
 
-				let userNameElem = document.getElementById('user-name');
+				const userNameElem = document.getElementById('user-name');
 				userNameElem.innerText = jsonResp.playerSummary.personaname;
 
-				let userURLElem = document.getElementById('user-url').querySelector('a');
+				const userURLElem = document.getElementById('user-url').querySelector('a');
 				userURLElem.innerText = jsonResp.playerSummary.profileurl;
 				userURLElem.setAttribute('href', jsonResp.playerSummary.profileurl);
 
