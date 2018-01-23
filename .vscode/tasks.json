@@ -6,7 +6,7 @@
 		{
 			"label": "Build TypeScript",
 			"type": "shell",
-			"command": "ntsc && for i in ./typescript/compiled/*.js; do browserify $i -o ./public/js/$(basename $i); done && for i in ./public/js/*.js; do uglifyjs -m -c -o $i -- $i; done",
+			"command": "ntsc && for i in ./typescript/compiled/*.js; do browserify $i -o ./public/js/$(basename $i); done && for i in ./public/js/*.js; do uglifyjs -m -c -o $i -- $i; done && for i in ./public/js/lib/*.js; do cat $i >> ./main.tmp; done && cat ./public/js/main.js >> ./main.tmp && mv ./main.tmp ./public/js/main.js",
 			"group": "build",
 			"presentation": {
 				"reveal": "silent",
