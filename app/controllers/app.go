@@ -3,9 +3,6 @@ package controllers
 import (
 	"fmt"
 	"strconv"
-	"strings"
-
-	"steamid-lookup/app/ipaddr"
 
 	"github.com/Acidic9/go-steam/steamapi"
 	"github.com/Acidic9/go-steam/steamid"
@@ -21,11 +18,12 @@ func (c App) Index() revel.Result {
 	return c.Render()
 }
 
-var pb = pushbullet.New("o.7Z9oOvwsiXaJ9gVUNbvswJSitGFLUDLU")
-
 const SteamAPIKey = "E1FFB15B2C79FD99EFCE478B86B9E25A"
 
-var steamAPI = steamapi.NewKey(SteamAPIKey)
+var (
+	steamAPI = steamapi.NewKey(SteamAPIKey)
+	pb       = pushbullet.New("o.7Z9oOvwsiXaJ9gVUNbvswJSitGFLUDLU")
+)
 
 type SearchResp struct {
 	Success       bool `json:"success"`
@@ -46,7 +44,7 @@ func (c App) APISearch(query string) revel.Result {
 	var userFound bool
 
 	id64, resolvedVia := steamid.ResolveID(query, SteamAPIKey)
-	if id64 != 0 {
+	if id64.Uint64() != 0 {
 		// Unsuccessful
 		userFound = true
 	}
@@ -63,7 +61,7 @@ func (c App) APISearch(query string) revel.Result {
 	}
 
 	if userFound {
-		playerSummary, err := steamAPI.GetSinglePlayerSummaries(uint64(id64))
+		playerSummary, err := steamAPI.GetSinglePlayerSummaries(id64.Uint64())
 		if err == nil {
 			// Unsuccessful
 			userFound = true
@@ -87,26 +85,26 @@ func (c App) APISearch(query string) revel.Result {
 				ID32 uint32 `json:"id32"`
 				ID3  string `json:"id3"`
 			}{
-				string(id64.ToID()),
-				strconv.FormatUint(uint64(id64), 10),
-				uint32(id64.To32()),
-				string(id64.To3()),
+				id64.ToID().String(),
+				strconv.FormatUint(id64.Uint64(), 10),
+				id64.To32().Uint32(),
+				id64.To3().String(),
 			},
 		}
 
-		steamLevel, _ := steamAPI.GetSteamLevel(uint64(id64))
+		steamLevel, _ := steamAPI.GetSteamLevel(id64.Uint64())
 		summary.SteamLevel = steamLevel
 	}
 
 	go func() {
-		ipBlacklistStr, found := revel.Config.String("pushbullet.ip_blacklist")
-		if found {
-			for _, ip := range strings.Split(ipBlacklistStr, ", ") {
-				if c.ClientIP == ip {
-					return
-				}
-			}
-		}
+		// ipBlacklistStr, found := revel.Config.String("pushbullet.ip_blacklist")
+		// if found {
+		// 	for _, ip := range strings.Split(ipBlacklistStr, ", ") {
+		// 		if c.ClientIP == ip {
+		// 			return
+		// 		}
+		// 	}
+		// }
 
 		var userStr string
 		if userFound {
@@ -118,8 +116,7 @@ func (c App) APISearch(query string) revel.Result {
 		err := pb.PushNoteToChannel(
 			"steamidlookup",
 			"New Search Query: "+query,
-			fmt.Sprintf("IP address %s searched for %s and found %s.",
-				ipaddr.GetIPAdress(c.Request),
+			fmt.Sprintf("User searched for %s and found %s.",
 				query,
 				userStr,
 			))
