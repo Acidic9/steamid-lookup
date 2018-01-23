@@ -88,7 +88,7 @@ export class Search {
 	}
 
 	private inputElemFocusEvent(ev: FocusEvent): any {
-		if (hasClass(document.querySelector('.search-form'), 'smaller'))
+		//if (hasClass(document.querySelector('.search-form'), 'smaller'))
 			this.inputElem.select();
 	}
 
@@ -98,7 +98,7 @@ export class Search {
 
 		this.inputElemHasBlurred = true;
 
-		addClass(document.querySelector('.search-form'), 'smaller');
+		//addClass(document.querySelector('.search-form'), 'smaller');
 	}
 
 	private onClipboardCopySuccess(ev: any): void {

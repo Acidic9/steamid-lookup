@@ -60,14 +60,12 @@ var Search = (function () {
         this.searchTimeout = setTimeout(function () { _this.execQuery(inputElemValue, true); }, Search.KeyUpSearchDelay);
     };
     Search.prototype.inputElemFocusEvent = function (ev) {
-        if (hasClass(document.querySelector('.search-form'), 'smaller'))
-            this.inputElem.select();
+        this.inputElem.select();
     };
     Search.prototype.inputElemBlurEvent = function (ev) {
         if (!this.hasSearched || this.inputElemHasBlurred)
             return;
         this.inputElemHasBlurred = true;
-        addClass(document.querySelector('.search-form'), 'smaller');
     };
     Search.prototype.onClipboardCopySuccess = function (ev) {
         var _this = this;
