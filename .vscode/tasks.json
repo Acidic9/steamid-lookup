@@ -1,0 +1,29 @@
+{
+	// See https://go.microsoft.com/fwlink/?LinkId=733558
+	// for the documentation about the tasks.json format
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "Build TypeScript",
+			"type": "shell",
+			"command": "ntsc && for i in ./typescript/compiled/*.js; do browserify $i -o ./public/js/$(basename $i); done && for i in ./public/js/*.js; do uglifyjs -m -c -o $i -- $i; done",
+			"group": "build",
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		},
+		{
+			"label": "Build SASS",
+			"type": "shell",
+			"command": "sass-css -i ./sass -o ./public/css",
+			"group": "build",
+			"presentation": {
+				"reveal": "silent",
+				"panel": "shared"
+			},
+			"problemMatcher": []
+		}
+	]
+}
