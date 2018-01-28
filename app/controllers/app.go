@@ -2,7 +2,9 @@ package controllers
 
 import (
 	"fmt"
+	"steamid-lookup/app/ipaddr"
 	"strconv"
+	"strings"
 
 	"github.com/Acidic9/go-steam/steamapi"
 	"github.com/Acidic9/go-steam/steamid"
@@ -97,14 +99,17 @@ func (c App) APISearch(query string) revel.Result {
 	}
 
 	go func() {
-		// ipBlacklistStr, found := revel.Config.String("pushbullet.ip_blacklist")
-		// if found {
-		// 	for _, ip := range strings.Split(ipBlacklistStr, ", ") {
-		// 		if c.ClientIP == ip {
-		// 			return
-		// 		}
-		// 	}
-		// }
+		clientIP := ipaddr.GetIPAdress(c.Request)
+		revel.AppLog.Info("Search query", "ip", clientIP, "query", query, "resolvedID", id64)
+
+		ipBlacklistStr, found := revel.Config.String("pushbullet.ip_blacklist")
+		if found {
+			for _, ip := range strings.Split(ipBlacklistStr, ", ") {
+				if clientIP == ip {
+					return
+				}
+			}
+		}
 
 		var userStr string
 		if userFound {
