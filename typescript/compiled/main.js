@@ -7,6 +7,9 @@ var Startup = (function () {
     Startup.main = function () {
         var searchBoxElem = document.getElementById('search-box');
         var search = new search_1.Search(searchBoxElem);
+        document.body.addEventListener('load', function () {
+            setTimeout(function () { return searchBoxElem.focus(); });
+        });
         document.querySelector('.search-form').onsubmit = function () {
             search.execQuery(searchBoxElem.value, true);
             return false;

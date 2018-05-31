@@ -10,6 +10,10 @@ class Startup {
 		const searchBoxElem = <HTMLInputElement>document.getElementById('search-box');
 		const search = new Search(searchBoxElem);
 
+		document.body.addEventListener('load', () => {
+			setTimeout(() => searchBoxElem.focus());
+		});
+
 		(document.querySelector('.search-form') as HTMLFormElement).onsubmit = () => {
 			search.execQuery(searchBoxElem.value, true);
 			return false;
